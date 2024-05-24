@@ -24,7 +24,7 @@ class MagnitudeFactory():
 
     def load_spectrum(self, path):
         spectrum =  pd.read_csv(path, skip_blank_lines=True, 
-                            comment='#', sep='\s+', 
+                            comment='#', sep='\s+', header=0,
                             names=['wavelength', 'flux'],engine='python')
         self.wavelength = spectrum['wavelength']
         self.flux = spectrum['flux']
@@ -34,7 +34,7 @@ class MagnitudeFactory():
             min_wavelength_filter = min(curve['wavelength'])
             max_wavelength_filter = max(curve['wavelength'])
             band_limits = self.wavelength[(self.wavelength >= min_wavelength_filter) & (self.wavelength <= max_wavelength_filter)]
-            bandpass = spectres.spectres(band_limits, curve['wavelength'], curve['flux'])
+            bandpass = np.interp(band_limits, curve['wavelength'], curve['flux'])
             spectral_flux = self.flux[(self.wavelength >= min_wavelength_filter) & (self.wavelength <= max_wavelength_filter)]
             flux_filter = (bandpass * spectral_flux)
             integral_flux = integrate.trapz(flux_filter, band_limits) 
@@ -46,13 +46,13 @@ class MagnitudeFactory():
 class HSTMagnitudeFactory(MagnitudeFactory):
     def __init__(self):
         super().__init__()
-        self.zero_points = {'F275':2.5*np.log10(3.74e-9), 
-                            'F336':2.5*np.log10(3.26e-9), 
-                            'F438':2.5*np.log10(6.73e-9), 
-                            'F606':2.5*np.log10(2.87e-9), 
-                            'F814':2.5*np.log10(1.14e-9)}
+        self.zero_points = {'F275W':2.5*np.log10(3.74e-9), 
+                            'F336W':2.5*np.log10(3.26e-9), 
+                            'F438W':2.5*np.log10(6.73e-9), 
+                            'F606W':2.5*np.log10(2.87e-9), 
+                            'F814W':2.5*np.log10(1.14e-9)}
         module_path = os.path.dirname(__file__)
-        filter_path = os.path.join(module_path,'transmission_curves', 'filterHST')
+        filter_path = os.path.join(module_path,'transmission_curves', 'filterHST', '*.dat')
         files = glob.glob(filter_path)
         self.load_filters(files)
         
