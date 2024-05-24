@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import spectres 
 import glob
 import os 
 from scipy import integrate
@@ -30,10 +29,10 @@ class MagnitudeFactory():
         self.flux = spectrum['flux']
     
     def compute_magnitude(self):
-        if not self.flux:
+        if self.flux is None:
             print('Spectrum not loaded yet.')
             return None
-        if not self.zero_points:
+        if self.zero_points is None:
             print('Zero Points not defined yet.')
             return None
         if self.transmission_curves == {}:
