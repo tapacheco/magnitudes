@@ -30,6 +30,15 @@ class MagnitudeFactory():
         self.flux = spectrum['flux']
     
     def compute_magnitude(self):
+        if not self.flux:
+            print('Spectrum not loaded yet.')
+            return None
+        if not self.zero_points:
+            print('Zero Points not defined yet.')
+            return None
+        if self.transmission_curves == {}:
+            print('Filter transmission curves not defined yet.')
+            return None
         for filter, curve in self.transmission_curves.items():
             min_wavelength_filter = min(curve['wavelength'])
             max_wavelength_filter = max(curve['wavelength'])
