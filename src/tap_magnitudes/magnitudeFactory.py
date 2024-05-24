@@ -45,6 +45,7 @@ class MagnitudeFactory():
 
 class HSTMagnitudeFactory(MagnitudeFactory):
     def __init__(self):
+        super().__init__()
         self.zero_points = {'F275':2.5*np.log10(3.74e-9), 
                             'F336':2.5*np.log10(3.26e-9), 
                             'F438':2.5*np.log10(6.73e-9), 
