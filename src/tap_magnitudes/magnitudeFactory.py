@@ -126,7 +126,7 @@ class JPASMagnitudeFactory(MagnitudeFactory):
                             'J0890': 2.5*np.log10(8.62e-10),
                             'J0900': 2.5*np.log10(8.35e-10),
                             'J0910': 2.5*np.log10(8.48e-10),
-                            'OAJ07': 2.5*np.log10(7.14e-10)
+                            'J1007': 2.5*np.log10(7.14e-10)
                             }
         module_path = os.path.dirname(__file__)
         filter_path = os.path.join(module_path,'transmission_curves', 'filterOAJ_JPAS', '*.dat')
