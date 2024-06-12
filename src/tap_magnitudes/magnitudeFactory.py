@@ -47,7 +47,7 @@ class MagnitudeFactory():
             flux_filter = (bandpass * spectral_flux)
             integral_flux = integrate.trapz(flux_filter, band_limits) 
             integral_bandpass = integrate.trapz(bandpass, band_limits) 
-            mag_filter = -2.5*np.log10(integral_flux/integral_bandpass) + self.zero_points[filter]
+            mag_filter = -2.5*np.log10(integral_flux/integral_bandpass) #+ self.zero_points[filter]
             self.magnitudes[filter] = mag_filter
             self.integrals[filter] = integral_flux
 
