@@ -33,8 +33,8 @@ class MagnitudeFactory():
         hdul = fits.open(path)
         self.flux = hdul[0].data
         hdr = hdul[0].header
-        delta = hdr['CDELT1']
-        start = hdr['CRVAL1']
+        delta = hdr['CDELT1']*10
+        start = hdr['CRVAL1']*10
         number = len(self.flux)
         self.wavelength = np.linspace(10**(start), 10**(start+(number-1)*delta), number)
    
