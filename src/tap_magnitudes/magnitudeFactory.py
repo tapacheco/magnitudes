@@ -3,6 +3,7 @@ import numpy as np
 import glob
 import os 
 from scipy import integrate
+from astropy.io import fits
 
 class MagnitudeFactory():
     def __init__(self):
@@ -27,7 +28,16 @@ class MagnitudeFactory():
                             names=['wavelength', 'flux'],engine='python')
         self.wavelength = spectrum['wavelength']
         self.flux = spectrum['flux']
-    
+
+    def load_fits_spectrum(self, path):
+        hdul = fits.open(path)
+        self.flux = hdul[0].data
+        hdr = hdul[0].header
+        delta = hdr['CDELT1']
+        start = hdr['CRVAL1']
+        number = len(self.flux)
+        self.wavelength = np.linspace(10**(start), 10**(start+(number-1)*delta), number)
+   
     def compute_magnitude(self):
         if self.flux is None:
             print('Spectrum not loaded yet.')
