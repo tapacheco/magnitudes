@@ -178,3 +178,17 @@ class LSSTMagnitudeFactory(MagnitudeFactory):
         filter_path = os.path.join(module_path,'transmission_curves', 'filterLSST', '*.dat')
         files = glob.glob(filter_path)
         self.load_filters(files)
+
+class EuclidMagnitudeFactory(MagnitudeFactory):
+    def __init__(self):
+        super().__init__()
+        self.zero_points = {'vis': 2.5*np.log10(1.68e-9),
+                            'Y': 2.5*np.log10(4.94e-10),
+                            'J': 2.5*np.log10(2.21e-10),
+                            'H':2.5*np.log10(8.84e-11)
+                            }
+        module_path = os.path.dirname(__file__)
+        filter_path = os.path.join(module_path,'transmission_curves', 'filterEuclid', '*.dat')
+        files = glob.glob(filter_path)
+        self.load_filters(files)
+   
