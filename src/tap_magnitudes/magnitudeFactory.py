@@ -37,7 +37,13 @@ class MagnitudeFactory():
         start = hdr['CRVAL1']
         number = len(self.flux)
         self.wavelength = np.linspace(10**(start)*10, 10**(start+(number-1)*delta)*10, number)
-   
+        
+    def load_fits_spec_XSLstar(self, path):
+        hdul = fits.open(path)
+        data = hdul[1].data
+        self.wavelength = data.field(0)
+        self.flux = data.field(1)
+ 
     def compute_magnitude(self):
         if self.flux is None:
             print('Spectrum not loaded yet.')
