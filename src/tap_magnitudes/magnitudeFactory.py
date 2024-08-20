@@ -70,11 +70,11 @@ class MagnitudeFactory():
 class HSTMagnitudeFactory(MagnitudeFactory):
     def __init__(self):
         super().__init__()
-        self.zero_points = {'F275W':2.5*np.log10(3.74e-9), 
-                            'F336W':2.5*np.log10(3.26e-9), 
-                            'F438W':2.5*np.log10(6.73e-9), 
-                            'F606W':2.5*np.log10(2.87e-9), 
-                            'F814W':2.5*np.log10(1.14e-9)}
+        self.zero_points = {'F275W':2.5*np.log10(1.48298e-8), 
+                            'F336W':2.5*np.log10(9.67405e-9), 
+                            'F438W':2.5*np.log10(5.81602e-9), 
+                            'F606W':2.5*np.log10(3.10404e-9), 
+                            'F814W':2.5*np.log10(1.68166e-9)}
         module_path = os.path.dirname(__file__)
         filter_path = os.path.join(module_path,'transmission_curves', 'filterHST', '*.dat')
         files = glob.glob(filter_path)
@@ -83,66 +83,66 @@ class HSTMagnitudeFactory(MagnitudeFactory):
 class JPASMagnitudeFactory(MagnitudeFactory):
     def __init__(self):
         super().__init__()
-        self.zero_points = {'uJava': 2.5*np.log10(3.27e-9),
-                            'u'	   : 2.5*np.log10(4.75e-9),
-                            'J0378': 2.5*np.log10(5.22e-9),
-                            'J0390': 2.5*np.log10(6.82e-9),
-                            'J0400': 2.5*np.log10(7.75e-9),
-                            'J0410': 2.5*np.log10(7.34e-9),
-                            'J0420': 2.5*np.log10(7.77e-9),
-                            'J0430': 2.5*np.log10(6.42e-9),
-                            'J0440': 2.5*np.log10(6.27e-9),
-                            'J0450': 2.5*np.log10(6.37e-9),
-                            'J0460': 2.5*np.log10(6.03e-9),
-                            'J0470': 2.5*np.log10(5.7e-9 ),
-                            'J0480': 2.5*np.log10(4.78e-9),
-                            'gSDSS': 2.5*np.log10(5.26e-9),
-                            'J0490': 2.5*np.log10(4.47e-9),
-                            'J0500': 2.5*np.log10(4.73e-9),
-                            'J0510': 2.5*np.log10(4.47e-9),
-                            'J0520': 2.5*np.log10(4.19e-9),
-                            'J0530': 2.5*np.log10(3.97e-9),
-                            'J0540': 2.5*np.log10(3.77e-9),
-                            'J0550': 2.5*np.log10(3.57e-9),
-                            'J0560': 2.5*np.log10(3.38e-9),
-                            'J0570': 2.5*np.log10(3.2e-9 ),
-                            'J0580': 2.5*np.log10(3.03e-9),
-                            'J0590': 2.5*np.log10(2.86e-9),
-                            'J0600': 2.5*np.log10(2.73e-9),
-                            'J0610': 2.5*np.log10(2.58e-9),
-                            'J0620': 2.5*np.log10(2.47e-9),
-                            'rSDSS': 2.5*np.log10(2.42e-9),
-                            'J0630': 2.5*np.log10(2.34e-9),
-                            'J0640': 2.5*np.log10(2.23e-9),
-                            'J0650': 2.5*np.log10(1.98e-9),
-                            'J0660': 2.5*np.log10(1.87e-9),
-                            'J0670': 2.5*np.log10(1.94e-9),
-                            'J0680': 2.5*np.log10(1.86e-9),
-                            'J0690': 2.5*np.log10(1.78e-9),
-                            'J0700': 2.5*np.log10(1.7e-9 ),
-                            'J0710': 2.5*np.log10(1.62e-9),
-                            'J0720': 2.5*np.log10(1.56e-9),
-                            'J0730': 2.5*np.log10(1.49e-9),
-                            'J0740': 2.5*np.log10(1.42e-9),
-                            'J0750': 2.5*np.log10(1.37e-9),
-                            'J0760': 2.5*np.log10(1.32e-9),
-                            'iSDSS': 2.5*np.log10(1.29e-9),
-                            'J0770': 2.5*np.log10(1.25e-9),
-                            'J0780': 2.5*np.log10(1.21e-9),
-                            'J0790': 2.5*np.log10(1.16e-9),
-                            'J0800': 2.5*np.log10(1.12e-9),
-                            'J0810': 2.5*np.log10(1.07e-9),
-                            'J0820': 2.5*np.log10(1.03e-9),
-                            'J0830': 2.5*np.log10(9.9e-10),
-                            'J0840': 2.5*np.log10(9.56e-10),
-                            'J0850': 2.5*np.log10(9.23e-10),
-                            'J0860': 2.5*np.log10(8.97e-10),
-                            'J0870': 2.5*np.log10(8.73e-10),
-                            'J0880': 2.5*np.log10(8.56e-10),
-                            'J0890': 2.5*np.log10(8.62e-10),
-                            'J0900': 2.5*np.log10(8.35e-10),
-                            'J0910': 2.5*np.log10(8.48e-10),
-                            'J1007': 2.5*np.log10(7.14e-10)
+        self.zero_points = {'uJava': 2.5*np.log10(8.66112e-9),
+                            'u'	   : 2.5*np.log10(7.96752e-9),
+                            'J0378': 2.5*np.log10(7.55142e-9),
+                            'J0390': 2.5*np.log10(7.14084e-9),
+                            'J0400': 2.5*np.log10(6.77949e-9),
+                            'J0410': 2.5*np.log10(6.42469e-9),
+                            'J0420': 2.5*np.log10(6.14183e-9),
+                            'J0430': 2.5*np.log10(5.85763e-9),
+                            'J0440': 2.5*np.log10(5.60069e-9),
+                            'J0450': 2.5*np.log10(5.33976e-9),
+                            'J0460': 2.5*np.log10(5.12449e-9),
+                            'J0470': 2.5*np.log10(4.91721e-9),
+                            'J0480': 2.5*np.log10(4.70778e-9),
+                            'gSDSS': 2.5*np.log10(4.78826e-9),
+                            'J0490': 2.5*np.log10(4.52121e-9),
+                            'J0500': 2.5*np.log10(4.34415e-9),
+                            'J0510': 2.5*np.log10(4.18154e-9),
+                            'J0520': 2.5*np.log10(4.01268e-9),
+                            'J0530': 2.5*np.log10(3.86929e-9),
+                            'J0540': 2.5*np.log10(3.73668e-9),
+                            'J0550': 2.5*np.log10(3.59574e-9),
+                            'J0560': 2.5*np.log10(3.46539e-9),
+                            'J0570': 2.5*np.log10(3.33849e-9),
+                            'J0580': 2.5*np.log10(3.2228e-9),
+                            'J0590': 2.5*np.log10(3.10583e-9),
+                            'J0600': 2.5*np.log10(3.01339e-9),
+                            'J0610': 2.5*np.log10(2.90854e-9),
+                            'J0620': 2.5*np.log10(2.82339e-9),
+                            'rSDSS': 2.5*np.log10(2.79082e-9),
+                            'J0630': 2.5*np.log10(2.73145e-9),
+                            'J0640': 2.5*np.log10(2.64874e-9),
+                            'J0650': 2.5*np.log10(2.57046e-9),
+                            'J0660': 2.5*np.log10(2.49319e-9),
+                            'J0670': 2.5*np.log10(2.41543e-9),
+                            'J0680': 2.5*np.log10(2.34662e-9),
+                            'J0690': 2.5*np.log10(2.27565e-9),
+                            'J0700': 2.5*np.log10(2.2161e-9),
+                            'J0710': 2.5*np.log10(2.14614e-9),
+                            'J0720': 2.5*np.log10(2.09281e-9),
+                            'J0730': 2.5*np.log10(2.03589e-9),
+                            'J0740': 2.5*np.log10(1.97923e-9),
+                            'J0750': 2.5*np.log10(1.93425e-9),
+                            'J0760': 2.5*np.log10(1.88486e-9),
+                            'iSDSS': 2.5*np.log10(1.85704e-9),
+                            'J0770': 2.5*np.log10(1.82615e-9),
+                            'J0780': 2.5*np.log10(1.78546e-9),
+                            'J0790': 2.5*np.log10(1.74052e-9),
+                            'J0800': 2.5*np.log10(1.69785e-9),
+                            'J0810': 2.5*np.log10(1.65328e-9),
+                            'J0820': 2.5*np.log10(1.61231e-9),
+                            'J0830': 2.5*np.log10(1.57298e-9),
+                            'J0840': 2.5*np.log10(1.53871e-9),
+                            'J0850': 2.5*np.log10(1.50343e-9),
+                            'J0860': 2.5*np.log10(1.47247e-9),
+                            'J0870': 2.5*np.log10(1.43518e-9),
+                            'J0880': 2.5*np.log10(1.39961e-9),
+                            'J0890': 2.5*np.log10(1.37102e-9),
+                            'J0900': 2.5*np.log10(1.34291e-9),
+                            'J0910': 2.5*np.log10(1.3157e-9),
+                            'J1007': 2.5*np.log10(1.18348e-9)
                             }
         module_path = os.path.dirname(__file__)
         filter_path = os.path.join(module_path,'transmission_curves', 'filterOAJ_JPAS', '*.dat')
@@ -152,18 +152,18 @@ class JPASMagnitudeFactory(MagnitudeFactory):
 class JPLUSMagnitudeFactory(MagnitudeFactory):
     def __init__(self):
         super().__init__()
-        self.zero_points = {'uJAVA': 2.5*np.log10(3.24e-9),
-                            'J0378': 2.5*np.log10(4.78e-9),
-                            'J0395': 2.5*np.log10(6.9e-9),
-                            'J0410': 2.5*np.log10(7.61e-9),
-                            'J0430': 2.5*np.log10(6.68e-9),
-                            'gSDSS': 2.5*np.log10(5.2e-9),
-                            'J0515': 2.5*np.log10(4.37e-9),
-                            'rSDSS': 2.5*np.log10(2.41e-9),
-                            'J0660': 2.5*np.log10(1.87e-9),
-                            'iSDSS': 2.5*np.log10(1.29e-9),
-                            'J0861': 2.5*np.log10(9.04e-10),
-                            'zSDSS': 2.5*np.log10(8.35e-10)
+        self.zero_points = {'uJAVA': 2.5*np.log10(8.71928e-9),
+                            'J0378': 2.5*np.log10(7.60886e-9),
+                            'J0395': 2.5*np.log10(7.01445e-9),
+                            'J0410': 2.5*np.log10(6.45002e-9),
+                            'J0430': 2.5*np.log10(5.87821e-9),
+                            'gSDSS': 2.5*np.log10(4.74459e-9),
+                            'J0515': 2.5*np.log10(4.11879e-9),
+                            'rSDSS': 2.5*np.log10(2.78078e-9),
+                            'J0660': 2.5*np.log10(2.496e-9),
+                            'iSDSS': 2.5*np.log10(1.85704e-9),
+                            'J0861': 2.5*np.log10(1.46822e-9),
+                            'zSDSS': 2.5*np.log10(1.35449e-9)
                             }
         module_path = os.path.dirname(__file__)
         filter_path = os.path.join(module_path,'transmission_curves', 'filterOAJ_JPLUS', '*.dat')
@@ -173,12 +173,12 @@ class JPLUSMagnitudeFactory(MagnitudeFactory):
 class LSSTMagnitudeFactory(MagnitudeFactory):
     def __init__(self):
         super().__init__()
-        self.zero_points = {'u': 2.5*np.log10(4.51e-9),
-                            'g': 2.5*np.log10(5.23e-9),
-                            'r': 2.5*np.log10(2.45e-9),
-                            'i': 2.5*np.log10(1.36e-9),
-                            'z': 2.5*np.log10(8.99e-10),
-                            'y': 2.5*np.log10(6.86e-10)
+        self.zero_points = {'u': 2.5*np.log10(8.03787e-9),
+                            'g': 2.5*np.log10(4.7597e-9),
+                            'r': 2.5*np.log10(2.8156e-9),
+                            'i': 2.5*np.log10(1.91864e-9),
+                            'z': 2.5*np.log10(1.44312e-9),
+                            'y': 2.5*np.log10(1.14978e-9)
                             }
         module_path = os.path.dirname(__file__)
         filter_path = os.path.join(module_path,'transmission_curves', 'filterLSST', '*.dat')
@@ -188,10 +188,10 @@ class LSSTMagnitudeFactory(MagnitudeFactory):
 class EuclidMagnitudeFactory(MagnitudeFactory):
     def __init__(self):
         super().__init__()
-        self.zero_points = {'vis': 2.5*np.log10(1.68e-9),
-                            'Y': 2.5*np.log10(4.94e-10),
-                            'J': 2.5*np.log10(2.21e-10),
-                            'H':2.5*np.log10(8.84e-11)
+        self.zero_points = {'vis': 2.5*np.log10(2.15734e-9),
+                            'Y': 2.5*np.log10(9.35783e-10),
+                            'J': 2.5*np.log10(5.86749e-10),
+                            'H':2.5*np.log10(3.49475e-10)
                             }
         module_path = os.path.dirname(__file__)
         filter_path = os.path.join(module_path,'transmission_curves', 'filterEuclid', '*.dat')
