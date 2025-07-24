@@ -61,8 +61,8 @@ class MagnitudeFactory():
             bandpass = np.interp(band_limits, curve['wavelength'], curve['flux'])
             spectral_flux = self.flux[(self.wavelength >= min_wavelength_filter) & (self.wavelength <= max_wavelength_filter)]
             flux_filter = (bandpass * spectral_flux)
-            integral_flux = integrate.trapz(flux_filter, band_limits) 
-            integral_bandpass = integrate.trapz(bandpass, band_limits) 
+            integral_flux = np.trapz(flux_filter, band_limits) 
+            integral_bandpass = np.trapz(bandpass, band_limits) 
             mag_filter = -2.5*np.log10(integral_flux/integral_bandpass) #+ self.zero_points[filter]
             self.magnitudes[filter] = mag_filter
             self.integrals[filter] = integral_flux
