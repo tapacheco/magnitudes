@@ -41,9 +41,9 @@ class MagnitudeFactory():
     def load_fits_spec_XSLstar(self, path):
         hdul = fits.open(path)
         data = hdul[1].data
-        self.wavelength = data.field(0)
-        self.flux = data.field(1)
- 
+        self.wavelength = data['WAVE']
+        self.flux = data['FLUX_DR']
+
     def compute_magnitude(self):
         if self.flux is None:
             print('Spectrum not loaded yet.')
