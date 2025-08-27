@@ -61,9 +61,9 @@ class MagnitudeFactory():
             bandpass = np.interp(band_limits, curve['wavelength'], curve['flux'])
             spectral_flux = self.flux[(self.wavelength >= min_wavelength_filter) & (self.wavelength <= max_wavelength_filter)]
             flux_filter = (bandpass * spectral_flux)
-            integral_flux = np.trapz(flux_filter, band_limits) 
-            integral_bandpass = np.trapz(bandpass, band_limits) 
-            mag_filter = -2.5*np.log10(integral_flux/integral_bandpass) #+ self.zero_points[filter]
+            integral_flux = np.trapezoid(flux_filter, band_limits) 
+            integral_bandpass = np.trapezoid(bandpass, band_limits) 
+            mag_filter = -2.5*np.log10(integral_flux/integral_bandpass) #- self.zero_points[filter]
             self.magnitudes[filter] = mag_filter
             self.integrals[filter] = integral_flux
 
@@ -197,4 +197,15 @@ class EuclidMagnitudeFactory(MagnitudeFactory):
         filter_path = os.path.join(module_path,'transmission_curves', 'filterEuclid', '*.dat')
         files = glob.glob(filter_path)
         self.load_filters(files)
-   
+
+class twoMASSMagnitudeFactory(MagnitudeFactory):
+    def __init__(self):
+        super().__init__()
+        self.zero_points = {'J': 2.5*np.log10(7.12762e-10),
+                            'H': 2.5*np.log10(4.01901e-10),
+                            'K': 2.5*np.log10(2.33246e-10)
+                            }
+        module_path = os.path.dirname(__file__)
+        filter_path = os.path.join(module_path,'transmission_curves', 'filter2MASS', '*.dat')
+        files = glob.glob(filter_path)
+        self.load_filters(files)
