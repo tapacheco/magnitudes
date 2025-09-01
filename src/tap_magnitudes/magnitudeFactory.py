@@ -203,7 +203,7 @@ class twoMASSMagnitudeFactory(MagnitudeFactory):
         super().__init__()
         self.zero_points = {'J': 2.5*np.log10(7.12762e-10),
                             'H': 2.5*np.log10(4.01901e-10),
-                            'K': 2.5*np.log10(2.33246e-10)
+                            'Ks': 2.5*np.log10(2.33246e-10)
                             }
         module_path = os.path.dirname(__file__)
         filter_path = os.path.join(module_path,'transmission_curves', 'filter2MASS', '*.dat')
