@@ -63,7 +63,14 @@ class MagnitudeFactory():
             flux_filter = (bandpass * spectral_flux)
             integral_flux = np.trapezoid(flux_filter, band_limits) 
             integral_bandpass = np.trapezoid(bandpass, band_limits) 
-            mag_filter = -2.5*np.log10(integral_flux/integral_bandpass) #- self.zero_points[filter]
+
+            if integral_flux <= 0 or integral_bandpass <= 0:
+                print(f"Zero value detected for filter {filter}:")
+                print(f"  integral_flux: {integral_flux}")
+                print(f"  integral_bandpass: {integral_bandpass}")
+                continue  # Skip this filter to avoid division by zero
+
+            mag_filter = -2.5*np.log10(integral_flux/integral_bandpass) - self.zero_points[filter]
             self.magnitudes[filter] = mag_filter
             self.integrals[filter] = integral_flux
 
