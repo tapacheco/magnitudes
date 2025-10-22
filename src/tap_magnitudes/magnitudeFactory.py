@@ -204,6 +204,36 @@ class EuclidMagnitudeFactory(MagnitudeFactory):
         filter_path = os.path.join(module_path,'transmission_curves', 'filterEuclid', '*.dat')
         files = glob.glob(filter_path)
         self.load_filters(files)
+    
+class CFHTMagnitudeFactory(MagnitudeFactory):
+    def __init__(self):
+        super().__init__()
+        self.zero_points = {
+            'u': 2.5*np.log10(8.05505e-9),
+            'g': 2.5*np.log10(8.05505e-9),
+            'r': 2.5*np.log10(2.6721e-9),
+            'i': 2.5*np.log10(1.84414e-9),
+            'z': 2.5*np.log10(1.34999e-9)
+        }
+        module_path = os.path.dirname(__file__)
+        filter_path = os.path.join(module_path,'transmission_curves', 'filterCFHT', '*.dat')
+        files = glob.glob(filter_path)
+        self.load_filters(files)
+
+class PanSTARRSMagnitudeFactory(MagnitudeFactory):
+    def __init__(self):
+        super().__init__()
+        self.zero_points = {
+            'g': 2.5*np.log10(4.62937e-9),
+            'r': 2.5*np.log10(2.83071e-9),
+            'i': 2.5*np.log10(1.91728e-9),
+            'z': 2.5*np.log10(1.44673e-9),
+            'y': 2.5*np.log10(1.17434e-9)
+        }
+        module_path = os.path.dirname(__file__)
+        filter_path = os.path.join(module_path,'transmission_curves', 'filterPanSTARRS', '*.dat')
+        files = glob.glob(filter_path)
+        self.load_filters(files)
 
 class twoMASSMagnitudeFactory(MagnitudeFactory):
     def __init__(self):
