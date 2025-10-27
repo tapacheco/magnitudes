@@ -4,6 +4,7 @@ import glob
 import os 
 from scipy import integrate
 from astropy.io import fits
+from astropy import constants as const
 
 class MagnitudeFactory():
     def __init__(self):
@@ -18,13 +19,13 @@ class MagnitudeFactory():
         for file in files:
             filter_name = file.split('.')[-2]
             filter =  pd.read_csv(file, skip_blank_lines=True, 
-                            comment='#', sep='\s+', 
+                            comment='#', sep=r'\s+', 
                             names=['wavelength', 'flux'],engine='python')
             self.transmission_curves[filter_name] = filter
 
     def load_spectrum(self, path):
         spectrum =  pd.read_csv(path, skip_blank_lines=True, 
-                            comment='#', sep='\s+', header=0,
+                            comment='#', sep=r'\s+', header=0,
                             names=['wavelength', 'flux'],engine='python')
         self.wavelength = spectrum['wavelength']
         self.flux = spectrum['flux']
@@ -44,7 +45,34 @@ class MagnitudeFactory():
         self.wavelength = data['WAVE']
         self.flux = data['FLUX_DR']
 
-    def compute_magnitude(self):
+    def convert_flambda_to_fnu(self):
+        if self.flux is None or self.wavelength is None:
+            print('Spectrum not loaded yet.')
+            return None
+        c_angstrom_per_s = const.c.to('AA/s').value
+        self.flux = self.flux * (self.wavelength ** 2) / c_angstrom_per_s  #  F_nu = f_lambda * lambda² / c
+        return self.flux
+
+    def compute_integrals(self, curve, band_limits):
+        wavelength_bypass = self.wavelength[band_limits]
+        spectral_flux = self.flux[band_limits]
+        bypass_flux = np.interp(wavelength_bypass, curve['wavelength'], curve['flux'])
+        spectrum_bypass_flux = (bypass_flux * spectral_flux)
+        integral_spectrum_bypass = np.trapezoid(spectrum_bypass_flux, wavelength_bypass)
+        integral_bandpass = np.trapezoid(bypass_flux, wavelength_bypass)
+
+        if integral_bandpass < 0:
+            print(f"Invalid integral_bandpass for filter {filter}: {integral_bandpass}")
+            return np.nan
+
+        if np.isnan(integral_spectrum_bypass) or np.isinf(integral_spectrum_bypass):
+            print(f"Invalid integral_spectrum_bypass for filter {filter}: {integral_spectrum_bypass}")
+            return np.nan
+
+        integrated_flux = integral_spectrum_bypass / integral_bandpass
+        return integrated_flux
+
+    def compute_magnitude(self, input_type='f_lambda', output_type='ab_mag'):
         if self.flux is None:
             print('Spectrum not loaded yet.')
             return None
@@ -54,25 +82,36 @@ class MagnitudeFactory():
         if self.transmission_curves == {}:
             print('Filter transmission curves not defined yet.')
             return None
+
+        results = {}
         for filter, curve in self.transmission_curves.items():
             min_wavelength_filter = min(curve['wavelength'])
             max_wavelength_filter = max(curve['wavelength'])
-            band_limits = self.wavelength[(self.wavelength >= min_wavelength_filter) & (self.wavelength <= max_wavelength_filter)]
-            bandpass = np.interp(band_limits, curve['wavelength'], curve['flux'])
-            spectral_flux = self.flux[(self.wavelength >= min_wavelength_filter) & (self.wavelength <= max_wavelength_filter)]
-            flux_filter = (bandpass * spectral_flux)
-            integral_flux = np.trapezoid(flux_filter, band_limits) 
-            integral_bandpass = np.trapezoid(bandpass, band_limits) 
+            band_limits = (self.wavelength >= min_wavelength_filter) & \
+                          (self.wavelength <= max_wavelength_filter)
 
-            if integral_flux <= 0 or integral_bandpass <= 0:
-                print(f"Zero value detected for filter {filter}:")
-                print(f"  integral_flux: {integral_flux}")
-                print(f"  integral_bandpass: {integral_bandpass}")
-                continue  # Skip this filter to avoid division by zero
+            if input_type == 'f_lambda':
+                if output_type == 'f_lambda':
+                    integrated_flux = self.compute_integrals(curve, band_limits)
+                    results[filter] = integrated_flux
+                else:
+                    self.flux = self.convert_flambda_to_fnu()
+                    integrated_flux = self.compute_integrals(curve, band_limits)
+                    ab_mag = -2.5 * np.log10(integrated_flux) - 48.6
+                    if output_type == 'f_nu':
+                        results[filter] = integrated_flux
+                    elif output_type == 'ab_mag':
+                        results[filter] = ab_mag
+            
+            elif input_type == 'f_nu':
+                integrated_flux = self.compute_integrals(curve, band_limits)
+                ab_mag = -2.5 * np.log10(integrated_flux) - 48.6
+                if output_type == 'f_nu':
+                    results[filter] = integrated_flux
+                elif output_type == 'ab_mag':
+                    results[filter] = ab_mag
 
-            mag_filter = -2.5*np.log10(integral_flux/integral_bandpass) - self.zero_points[filter]
-            self.magnitudes[filter] = mag_filter
-            self.integrals[filter] = integral_flux
+        return results
 
 class HSTMagnitudeFactory(MagnitudeFactory):
     def __init__(self):
@@ -159,18 +198,18 @@ class JPASMagnitudeFactory(MagnitudeFactory):
 class JPLUSMagnitudeFactory(MagnitudeFactory):
     def __init__(self):
         super().__init__()
-        self.zero_points = {'uJAVA': 2.5*np.log10(8.71928e-9),
-                            'J0378': 2.5*np.log10(7.60886e-9),
-                            'J0395': 2.5*np.log10(7.01445e-9),
-                            'J0410': 2.5*np.log10(6.45002e-9),
-                            'J0430': 2.5*np.log10(5.87821e-9),
-                            'gSDSS': 2.5*np.log10(4.74459e-9),
-                            'J0515': 2.5*np.log10(4.11879e-9),
-                            'rSDSS': 2.5*np.log10(2.78078e-9),
-                            'J0660': 2.5*np.log10(2.496e-9),
-                            'iSDSS': 2.5*np.log10(1.85704e-9),
-                            'J0861': 2.5*np.log10(1.46822e-9),
-                            'zSDSS': 2.5*np.log10(1.35449e-9)
+        self.zero_points = {'uJAVA': 8.71928e-9,
+                            'J0378': 7.60886e-9,
+                            'J0395': 7.01445e-9,
+                            'J0410': 6.45002e-9,
+                            'J0430': 5.87821e-9,
+                            'gSDSS': 4.74459e-9,
+                            'J0515': 4.11879e-9,
+                            'rSDSS': 2.78078e-9,
+                            'J0660': 2.496e-9,
+                            'iSDSS': 1.85704e-9,
+                            'J0861': 1.46822e-9,
+                            'zSDSS': 1.35449e-9
                             }
         module_path = os.path.dirname(__file__)
         filter_path = os.path.join(module_path,'transmission_curves', 'filterOAJ_JPLUS', '*.dat')
@@ -192,13 +231,13 @@ class LSSTMagnitudeFactory(MagnitudeFactory):
         files = glob.glob(filter_path)
         self.load_filters(files)
 
-class EuclidMagnitudeFactory(MagnitudeFactory):
+class EUCLIDMagnitudeFactory(MagnitudeFactory):
     def __init__(self):
         super().__init__()
-        self.zero_points = {'vis': 2.5*np.log10(2.15734e-9),
-                            'Y': 2.5*np.log10(9.35783e-10),
-                            'J': 2.5*np.log10(5.86749e-10),
-                            'H':2.5*np.log10(3.49475e-10)
+        self.zero_points = {'VIS': 2.5*np.log10(2.15734e-9),
+                            'YE': 2.5*np.log10(9.35783e-10),
+                            'JE': 2.5*np.log10(5.86749e-10),
+                            'HE':2.5*np.log10(3.49475e-10)
                             }
         module_path = os.path.dirname(__file__)
         filter_path = os.path.join(module_path,'transmission_curves', 'filterEuclid', '*.dat')
@@ -220,22 +259,22 @@ class CFHTMagnitudeFactory(MagnitudeFactory):
         files = glob.glob(filter_path)
         self.load_filters(files)
 
-class PanSTARRSMagnitudeFactory(MagnitudeFactory):
+class PANSTARRSMagnitudeFactory(MagnitudeFactory):
     def __init__(self):
         super().__init__()
         self.zero_points = {
-            'g': 2.5*np.log10(4.62937e-9),
-            'r': 2.5*np.log10(2.83071e-9),
-            'i': 2.5*np.log10(1.91728e-9),
-            'z': 2.5*np.log10(1.44673e-9),
-            'y': 2.5*np.log10(1.17434e-9)
+            'g_ps': 2.5*np.log10(4.62937e-9),
+            'r_ps': 2.5*np.log10(2.83071e-9),
+            'i_ps': 2.5*np.log10(1.91728e-9),
+            'z_ps': 2.5*np.log10(1.44673e-9),
+            'y_ps': 2.5*np.log10(1.17434e-9)
         }
         module_path = os.path.dirname(__file__)
         filter_path = os.path.join(module_path,'transmission_curves', 'filterPanSTARRS', '*.dat')
         files = glob.glob(filter_path)
         self.load_filters(files)
 
-class twoMASSMagnitudeFactory(MagnitudeFactory):
+class TWOMASSMagnitudeFactory(MagnitudeFactory):
     def __init__(self):
         super().__init__()
         self.zero_points = {'J': 2.5*np.log10(7.12762e-10),
