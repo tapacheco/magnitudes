@@ -285,3 +285,21 @@ class TWOMASSMagnitudeFactory(MagnitudeFactory):
         filter_path = os.path.join(module_path,'transmission_curves', 'filter2MASS', '*.dat')
         files = glob.glob(filter_path)
         self.load_filters(files)
+        
+
+class OPTICALMagnitudeFactory(MagnitudeFactory):
+    def __init__(self):
+        super().__init__()
+        self.zero_points = {
+                            'gSDSS': 4.74459e-9,
+                            'J0515': 4.11879e-9,
+                            'rSDSS': 2.78078e-9,
+                            'J0660': 2.496e-9,
+                            'iSDSS': 1.85704e-9,
+                            'J0861': 1.46822e-9,
+                            }
+        module_path = os.path.dirname(__file__)
+        filter_path = os.path.join(module_path,'transmission_curves', 'filterOptical', '*.dat')
+        files = glob.glob(filter_path)
+        self.load_filters(files)
+        
